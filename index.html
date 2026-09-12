@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Nag Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-0: #eef4ff;
+    --bg-1: #dbe9ff;
+    --bg-2: #ffe9c7;
+    --bg-3: #ffd0a8;
+    --bg-4: #ffb3a3;
+    --bg-5: #ff8a8a;
+    --card-0: #2563eb;
+    --card-1: #3b82f6;
+    --card-2: #f59e0b;
+    --card-3: #f97316;
+    --card-4: #ef4444;
+    --card-5: #dc2626;
+    --ink: #1f2430;
+    --paper: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100dvh;
+    font-family: 'Rubik', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--bg-0);
+    transition: background-color 1.2s ease;
+  }
+
+  .shell {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    gap: 18px;
+    text-align: center;
+  }
+
+  .brand {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 5;
+  }
+
+  .brand a {
+    color: inherit;
+    opacity: 0.65;
+    text-decoration: none;
+  }
+
+  .footer-link {
+    margin-top: 28px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.65;
+  }
+
+  .footer-link a {
+    color: inherit;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(28px, 6vw, 40px);
+    font-weight: 800;
+  }
+
+  .tagline {
+    margin: 0;
+    opacity: 0.75;
+    font-size: 15px;
+    max-width: 340px;
+  }
+
+  .setup-box {
+    width: 100%;
+    max-width: 420px;
+    background: var(--paper);
+    border-radius: 20px;
+    padding: 26px 22px;
+    box-shadow: 0 10px 30px rgba(30, 40, 70, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 84px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 17px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 2px solid #dbe4f5;
+    outline: none;
+  }
+
+  textarea:focus {
+    border-color: var(--card-0);
+  }
+
+  button {
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    min-height: 48px;
+    padding: 0 20px;
+    cursor: pointer;
+  }
+
+  .primary-btn {
+    background: var(--card-0);
+    color: #fff;
+    transition: background-color 0.6s ease;
+  }
+
+  .ghost-link {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.55;
+    min-height: 44px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 460px;
+    background: var(--paper);
+    border-radius: 24px;
+    padding: 36px 24px;
+    box-shadow: 0 14px 40px rgba(30, 40, 70, 0.18);
+    border-top: 10px solid var(--card-0);
+    transition: border-color 0.6s ease, transform 0.15s ease;
+  }
+
+  .level-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    opacity: 0.5;
+    margin-bottom: 10px;
+  }
+
+  .task-text {
+    font-weight: 800;
+    line-height: 1.25;
+    word-wrap: break-word;
+    font-size: 22px;
+    transition: font-size 0.6s ease;
+  }
+
+  .elapsed {
+    margin-top: 14px;
+    font-size: 13px;
+    opacity: 0.55;
+  }
+
+  .actions {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .done-btn {
+    background: var(--card-0);
+    color: #fff;
+    transition: background-color 0.6s ease;
+  }
+
+  .stats {
+    font-size: 13px;
+    opacity: 0.6;
+    margin-top: 4px;
+  }
+
+  @keyframes pulseSoft {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.015); }
+  }
+
+  @keyframes pulseHard {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+  }
+
+  @keyframes shakeIt {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    20% { transform: translateX(-4px) rotate(-0.6deg); }
+    40% { transform: translateX(4px) rotate(0.6deg); }
+    60% { transform: translateX(-3px) rotate(-0.4deg); }
+    80% { transform: translateX(3px) rotate(0.4deg); }
+  }
+
+  .lvl-pulse { animation: pulseSoft 2.4s ease-in-out infinite; }
+  .lvl-pulse-hard { animation: pulseHard 1.1s ease-in-out infinite; }
+  .lvl-shake { animation: shakeIt 0.5s ease-in-out infinite; }
+
+  .flash-overlay {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  .flash-overlay.go {
+    animation: gotchaFlash 0.45s ease;
+  }
+
+  @keyframes gotchaFlash {
+    0% { opacity: 0.85; }
+    100% { opacity: 0; }
+  }
+
+  .relief-icon {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--card-0);
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="brand"><a href="https://augustineiacopelli.github.io/appaday/">AppADay #127</a></div>
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<div class="shell">
+
+  <div id="setupView">
+    <h1>Nag Card</h1>
+    <p class="tagline">Type the one thing you cannot forget today. Leave this tab open and it will get progressively less pleasant until you deal with it.</p>
+    <div class="setup-box">
+      <textarea id="taskInput" maxlength="140" placeholder="e.g. Submit the enrollment report by 4pm"></textarea>
+      <button class="primary-btn" id="startBtn">Start nagging me</button>
+    </div>
+    <div class="stats" id="statsLine"></div>
+  </div>
+
+  <div id="activeView" class="hidden">
+    <div class="card" id="nagCard">
+      <div class="level-label" id="levelLabel">Calm</div>
+      <div class="task-text" id="taskText"></div>
+      <div class="elapsed" id="elapsedText"></div>
+    </div>
+    <div class="actions">
+      <button class="done-btn" id="doneBtn">Done. Make it stop.</button>
+      <button class="ghost-link" id="cancelBtn">Not doing this one</button>
+    </div>
+  </div>
+
+  <div id="reliefView" class="hidden">
+    <div class="relief-icon">Done.</div>
+    <h1>Nag defeated</h1>
+    <p class="tagline" id="reliefLine"></p>
+    <button class="primary-btn" id="newTaskBtn">Set the next one</button>
+  </div>
+
+  <div class="footer-link"><a href="https://augustineiacopelli.github.io/appaday/">Back to AppADay portfolio</a></div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORE_KEY = 'nagcard_task_v1';
+  var STATS_KEY = 'nagcard_stats_v1';
+
+  var THRESHOLD_MIN = [0, 2, 5, 10, 20, 40];
+  var LEVEL_LABELS = ['Calm', 'Noticing', 'Nudging', 'Insisting', 'Nagging hard', 'Full alarm'];
+  var BG_VARS = ['--bg-0', '--bg-1', '--bg-2', '--bg-3', '--bg-4', '--bg-5'];
+  var CARD_VARS = ['--card-0', '--card-1', '--card-2', '--card-3', '--card-4', '--card-5'];
+  var FONT_SIZES = [22, 24, 27, 30, 34, 38];
+  var VIBRATE_PATTERNS = [null, null, [80], [80, 60, 80], [120, 80, 120], [160, 90, 160, 90, 160]];
+
+  var root = document.documentElement.style;
+  var setupView = document.getElementById('setupView');
+  var activeView = document.getElementById('activeView');
+  var reliefView = document.getElementById('reliefView');
+  var taskInput = document.getElementById('taskInput');
+  var startBtn = document.getElementById('startBtn');
+  var doneBtn = document.getElementById('doneBtn');
+  var cancelBtn = document.getElementById('cancelBtn');
+  var newTaskBtn = document.getElementById('newTaskBtn');
+  var nagCard = document.getElementById('nagCard');
+  var levelLabel = document.getElementById('levelLabel');
+  var taskTextEl = document.getElementById('taskText');
+  var elapsedTextEl = document.getElementById('elapsedText');
+  var statsLine = document.getElementById('statsLine');
+  var reliefLine = document.getElementById('reliefLine');
+  var flashOverlay = document.getElementById('flashOverlay');
+
+  var originalTitle = document.title;
+  var titleBlinkId = null;
+  var tickId = null;
+  var lastVibrateLevel = -1;
+  var currentTask = null;
+
+  function safeGet(key) {
+    try {
+      var raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function safeSet(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {
+      /* storage unavailable, continue without persistence */
+    }
+  }
+
+  function safeRemove(key) {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  function getStats() {
+    var s = safeGet(STATS_KEY);
+    if (!s || typeof s.completed !== 'number') {
+      s = { completed: 0 };
+    }
+    return s;
+  }
+
+  function renderStatsLine() {
+    var s = getStats();
+    if (s.completed > 0) {
+      statsLine.textContent = 'Beaten so far: ' + s.completed;
+    } else {
+      statsLine.textContent = '';
+    }
+  }
+
+  function levelForMinutes(minutes) {
+    var lvl = 0;
+    for (var i = 0; i < THRESHOLD_MIN.length; i++) {
+      if (minutes >= THRESHOLD_MIN[i]) {
+        lvl = i;
+      }
+    }
+    return lvl;
+  }
+
+  function applyLevel(lvl) {
+    root.setProperty('background-color', 'var(' + BG_VARS[lvl] + ')');
+    document.body.style.backgroundColor = 'var(' + BG_VARS[lvl] + ')';
+    nagCard.style.borderColor = 'var(' + CARD_VARS[lvl] + ')';
+    doneBtn.style.backgroundColor = 'var(' + CARD_VARS[lvl] + ')';
+    taskTextEl.style.fontSize = FONT_SIZES[lvl] + 'px';
+    levelLabel.textContent = LEVEL_LABELS[lvl];
+
+    nagCard.classList.remove('lvl-pulse', 'lvl-pulse-hard', 'lvl-shake');
+    if (lvl === 2 || lvl === 3) {
+      nagCard.classList.add('lvl-pulse');
+    } else if (lvl === 4) {
+      nagCard.classList.add('lvl-pulse-hard');
+    } else if (lvl === 5) {
+      nagCard.classList.add('lvl-shake');
+    }
+
+    if (lvl > lastVibrateLevel && VIBRATE_PATTERNS[lvl] && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(VIBRATE_PATTERNS[lvl]);
+      } catch (e) {
+        /* ignore */
+      }
+    }
+    lastVibrateLevel = lvl;
+  }
+
+  function formatElapsed(ms) {
+    var totalSeconds = Math.floor(ms / 1000);
+    var h = Math.floor(totalSeconds / 3600);
+    var m = Math.floor((totalSeconds % 3600) / 60);
+    var s = totalSeconds % 60;
+    var parts = [];
+    if (h > 0) parts.push(h + 'h');
+    parts.push(m + 'm');
+    parts.push(s + 's');
+    return 'Open for ' + parts.join(' ');
+  }
+
+  function tick() {
+    if (!currentTask) return;
+    var elapsedMs = Date.now() - currentTask.startTime;
+    var minutes = elapsedMs / 60000;
+    var lvl = levelForMinutes(minutes);
+    applyLevel(lvl);
+    elapsedTextEl.textContent = formatElapsed(elapsedMs);
+  }
+
+  function startTitleBlink() {
+    if (titleBlinkId || !currentTask) return;
+    var toggle = false;
+    titleBlinkId = setInterval(function () {
+      document.title = toggle ? originalTitle : ('REMINDER - ' + currentTask.text);
+      toggle = !toggle;
+    }, 1000);
+  }
+
+  function stopTitleBlink() {
+    if (titleBlinkId) {
+      clearInterval(titleBlinkId);
+      titleBlinkId = null;
+    }
+    document.title = originalTitle;
+  }
+
+  function triggerGotchaFlash() {
+    flashOverlay.classList.remove('go');
+    void flashOverlay.offsetWidth;
+    flashOverlay.classList.add('go');
+  }
+
+  function showView(name) {
+    setupView.classList.add('hidden');
+    activeView.classList.add('hidden');
+    reliefView.classList.add('hidden');
+    if (name === 'setup') setupView.classList.remove('hidden');
+    if (name === 'active') activeView.classList.remove('hidden');
+    if (name === 'relief') reliefView.classList.remove('hidden');
+  }
+
+  function startTask(text) {
+    currentTask = { text: text, startTime: Date.now() };
+    safeSet(STORE_KEY, currentTask);
+    lastVibrateLevel = -1;
+    taskTextEl.textContent = currentTask.text;
+    showView('active');
+    if (tickId) clearInterval(tickId);
+    tick();
+    tickId = setInterval(tick, 1000);
+  }
+
+  function stopTicking() {
+    if (tickId) {
+      clearInterval(tickId);
+      tickId = null;
+    }
+    stopTitleBlink();
+  }
+
+  function finishTask(markDone) {
+    stopTicking();
+    if (markDone) {
+      var s = getStats();
+      s.completed = s.completed + 1;
+      safeSet(STATS_KEY, s);
+      var elapsedMs = Date.now() - currentTask.startTime;
+      reliefLine.textContent = 'That one took ' + formatElapsed(elapsedMs).replace('Open for ', '') + ' to face. Nice work.';
+      showView('relief');
+    } else {
+      showView('setup');
+    }
+    currentTask = null;
+    safeRemove(STORE_KEY);
+    document.body.style.backgroundColor = 'var(--bg-0)';
+    document.title = originalTitle;
+  }
+
+  startBtn.addEventListener('click', function () {
+    var text = taskInput.value.trim();
+    if (!text) {
+      taskInput.focus();
+      return;
+    }
+    taskInput.value = '';
+    startTask(text);
+  });
+
+  taskInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      startBtn.click();
+    }
+  });
+
+  doneBtn.addEventListener('click', function () {
+    finishTask(true);
+  });
+
+  cancelBtn.addEventListener('click', function () {
+    finishTask(false);
+  });
+
+  newTaskBtn.addEventListener('click', function () {
+    renderStatsLine();
+    showView('setup');
+  });
+
+  document.addEventListener('visibilitychange', function () {
+    if (!currentTask) return;
+    if (document.hidden) {
+      startTitleBlink();
+    } else {
+      stopTitleBlink();
+      triggerGotchaFlash();
+    }
+  });
+
+  function init() {
+    var saved = safeGet(STORE_KEY);
+    if (saved && saved.text && saved.startTime) {
+      currentTask = saved;
+      taskTextEl.textContent = currentTask.text;
+      showView('active');
+      tick();
+      tickId = setInterval(tick, 1000);
+      if (document.hidden) startTitleBlink();
+    } else {
+      renderStatsLine();
+      showView('setup');
+    }
+  }
+
+  init();
+})();
+</script>
+
+</body>
+</html>
